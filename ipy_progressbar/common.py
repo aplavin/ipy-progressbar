@@ -80,5 +80,5 @@ class ProgressBarBase(object):
         # for % formatting
         try:
             return getattr(self, key)
-        except AttributeError:
+        except:
             return float('NaN')
