@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='ipy-progressbar',
-      version='0.3',
+      version='1.0',
       description='Progressbar for both IPython Notebooks (HTML, CSS, JS) and plain terminals.',
       url='https://hg.plav.in/my_projects/ipy-progressbar',
       author='Alexander Plavin',
