@@ -67,7 +67,7 @@ class ProgressBarIPyNb(ProgressBarBase):
     def __init__(self,
                  iterable_or_max,
                  title='Progress', key=None, autohide=False, quiet=False,
-                 format_str='%(current)d/%(max)d (%(percent)d%%) in %(elapsed).1f s, %(last_iter_time).2f s last iter; eta %(eta_byall).0f s (%(eta_byone).0f s)'):
+                 format_str='%(current)d/%(max)d (%(percent)d%%) in %(elapsed).1f s, %(last_iter_time).2f s last iter; eta %(eta_avg).0f+-%(eta_stddev).0f s'):
         super(ProgressBarIPyNb, self).__init__(iterable_or_max, title, key, autohide, quiet)
         self.format_str = format_str
 

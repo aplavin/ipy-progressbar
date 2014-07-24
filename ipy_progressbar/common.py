@@ -1,4 +1,6 @@
 from time import time
+from collections import deque
+from math import sqrt
 
 
 class ProgressBarBase(object):
@@ -24,6 +26,7 @@ class ProgressBarBase(object):
         self.quiet = quiet
 
         self.current = None
+        self.iter_times = deque(maxlen=100)
 
     def start(self):
         self.start_time = time()
@@ -31,7 +34,7 @@ class ProgressBarBase(object):
         self.current = 0
 
     def advance(self):
-        self.last_iter_time = time() - self.last_time
+        self.iter_times.append(time() - self.last_time)
         self.last_time = time()
         self.current += 1
 
@@ -65,16 +68,14 @@ class ProgressBarBase(object):
         return time() - self.start_time
 
     @property
-    def eta_byone(self):
-        if self.current == 0:
-            return 0
-        return self.last_iter_time * (self.max - self.current)
+    def eta_avg(self):
+        return (self.max - self.current) * sum(self.iter_times) / len(self.iter_times)
 
     @property
-    def eta_byall(self):
-        if self.current == 0:
-            return 0
-        return self.elapsed * (self.max - self.current) / self.current
+    def eta_stddev(self):
+        mean = sum(self.iter_times) / len(self.iter_times)
+        ss = sum((t - mean)**2 for t in self.iter_times)
+        return (self.max - self.current) * sqrt(ss / len(self.iter_times))
 
     def __getitem__(self, key):
         # for % formatting
