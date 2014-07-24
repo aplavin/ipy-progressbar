@@ -68,6 +68,10 @@ class ProgressBarBase(object):
         return time() - self.start_time
 
     @property
+    def last_iter_time(self):
+        return self.iter_times[-1]
+
+    @property
     def eta_avg(self):
         return (self.max - self.current) * sum(self.iter_times) / len(self.iter_times)
 
