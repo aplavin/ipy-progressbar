@@ -7,9 +7,9 @@ class ProgressBarTerminal(ProgressBarBase):
 
     def __init__(self,
                  iterable_or_max,
-                 title=None, key=None, autohide=False, quiet=False,
-                 format_str='%(percent)3d%% [%(bar)s] %(current)d/%(max)d [%(elapsed).1f s] [eta %(eta_byone)d s]',
-                 width=60):
+                 title='Progress', key=None, autohide=False, quiet=False,
+                 format_str='%(title)s: %(percent)3d%% [%(bar)s] %(current)d/%(max)d [%(elapsed).1f s] [eta %(eta_byone)d s]',
+                 width=80):
         super(ProgressBarTerminal, self).__init__(iterable_or_max, title, key, autohide, quiet)
         self.format_strs = format_str.split('%(bar)s')
         self.width = width
