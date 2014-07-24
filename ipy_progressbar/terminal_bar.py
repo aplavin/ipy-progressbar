@@ -49,5 +49,5 @@ class ProgressBarTerminal(ProgressBarBase):
                 self.phases[0] * (bar_width - completely_filled))
 
     def set_extra_text(self, text):
-        super(ProgressBarTerminal, self).set_extra_text()
+        super(ProgressBarTerminal, self).set_extra_text(text)
         raise NotImplementedError
