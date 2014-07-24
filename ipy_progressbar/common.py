@@ -77,4 +77,8 @@ class ProgressBarBase(object):
         return self.elapsed * (self.max - self.current) / self.current
 
     def __getitem__(self, key):
-        return getattr(self, key)
+        # for % formatting
+        try:
+            return getattr(self, key)
+        except AttributeError:
+            return float('NaN')
