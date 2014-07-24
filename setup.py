@@ -7,5 +7,5 @@ setup(name='ipy-progressbar',
       author='Alexander Plavin',
       author_email='alexander@plav.in',
       license='MIT',
-      packages=['ipy-progressbar'],
+      packages=['ipy_progressbar'],
       zip_safe=False)
