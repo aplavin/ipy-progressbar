@@ -2,13 +2,13 @@ from setuptools import setup
 
 
 try:
-   import pypandoc
-   long_description = pypandoc.convert('README.md', 'rst')
+    import pypandoc
+    long_description = pypandoc.convert('README.md', 'rst')
 except (IOError, ImportError):
-   long_description = ''
+    long_description = ''
 
 setup(name='ipy-progressbar',
-      version='1.0.1',
+      version='1.0.2',
       description='Progressbar for both IPython Notebooks (HTML, CSS, JS) and plain terminals.',
       long_description = long_description,
       classifiers=[
