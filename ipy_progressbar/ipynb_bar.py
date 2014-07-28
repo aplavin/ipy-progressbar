@@ -1,4 +1,4 @@
-from .common import ProgressBarBase
+from .base import ProgressBarBase
 import uuid
 from IPython.display import display_html, display_javascript
 

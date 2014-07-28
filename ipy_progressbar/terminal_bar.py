@@ -1,5 +1,5 @@
 #encoding: utf-8
-from .common import ProgressBarBase
+from .base import ProgressBarBase
 import sys
 
 
