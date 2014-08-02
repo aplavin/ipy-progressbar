@@ -37,10 +37,14 @@ class ProgressBarIPyNb(ProgressBarBase):
                     width: 100%%;
                     text-align: center;
                 }
+
+                .progress .bar {
+                    transition-property: none;
+                }
             </style>
 
             <h3>%(title)s:</h3>
-            <div class="progress progress-striped active" id="%(html_id)s" data-key=%(key)s>
+            <div class="progress" id="%(html_id)s" data-key=%(key)s>
                 <div class="bar bar-success completed-part" style="width: 0%%;"></div>
                 <div class="bar bar-warning running-part" style="width: 100%%;"></div>
                 <div class="text">
@@ -57,7 +61,6 @@ class ProgressBarIPyNb(ProgressBarBase):
 
     def finish(self):
         super(ProgressBarIPyNb, self).finish()
-        display_javascript('$("#%s").removeClass("progress-striped active")' % self.html_id, raw=True)
 
     def hide(self):
         super(ProgressBarIPyNb, self).hide()
