@@ -50,4 +50,3 @@ class ProgressBarTerminal(ProgressBarBase):
 
     def set_extra_text(self, text):
         super(ProgressBarTerminal, self).set_extra_text(text)
-        raise NotImplementedError

@@ -17,8 +17,8 @@ class ProgressBarIPyNb(ProgressBarBase):
     def output_change_value(self):
         if self.quiet:
             return
-        display_javascript('$("#%(html_id)s > .completed-part").css("width", "%(percent)d%%")' % self, raw=True)
-        display_javascript('$("#%(html_id)s > .running-part").css("width", "%(percent_one)d%%")' % self, raw=True)
+        display_javascript('$("#%(html_id)s > .completed-part").css("width", "%(percent)f%%")' % self, raw=True)
+        display_javascript('$("#%(html_id)s > .running-part").css("width", "%(percent_one)f%%")' % self, raw=True)
         display_javascript('$("#%s > .text > .main").text("%s")' % (self.html_id, self.format_str % self), raw=True)
 
     def start(self):
@@ -28,29 +28,29 @@ class ProgressBarIPyNb(ProgressBarBase):
             display_html('''
             <style>
                 .progress {
-                    position: relative;
+                    text-align:center;
+                }
+
+                .progress > .progress-bar {
+                    transition-property: none;
                 }
 
                 .progress > .text {
                     position: absolute;
+                    right: 0;
                     left: 0;
-                    width: 100%%;
-                    text-align: center;
-                }
-
-                .progress .bar {
-                    transition-property: none;
                 }
             </style>
 
             <h3>%(title)s:</h3>
-            <div class="progress" id="%(html_id)s" data-key=%(key)s>
-                <div class="bar bar-success completed-part" style="width: 0%%;"></div>
-                <div class="bar bar-warning running-part" style="width: 100%%;"></div>
-                <div class="text">
+
+            <div class="progress" id="%(html_id)s" data-key="%(key)s">
+                <div class="progress-bar progress-bar-success completed-part" style="width: 0%%"></div>
+                <div class="progress-bar progress-bar-warning running-part" style="width: 100%%"></div>
+                <span class="text">
                     <span class="main">Starting...</span>
                     <span class="extra"></span>
-                </div>
+                </span>
             </div>
             ''' % self, raw=True)
         self.output_change_value()
