@@ -13,31 +13,39 @@ class ProgressBarTerminal(ProgressBarBase):
         super(ProgressBarTerminal, self).__init__(iterable_or_max, title, key, autohide, quiet)
         self.format_strs = format_str.split('%(bar)s')
         self.width = width
+        self.quiet = quiet
         self.phases = (u' ', u'▏', u'▎', u'▍', u'▌', u'▋', u'▊', u'▉', u'█')
+
+    def p(self, s=None):
+        if not self.quiet:
+            if s is None:
+                print
+            else:
+                print s,
 
     def print_output(self):
         parts = [format % self for format in self.format_strs]
         parts[1:1] = self.bar(self.width - sum(map(len, parts)))
-        print '\r' + ''.join(parts),
+        self.p( '\r' + ''.join(parts))
         sys.stdout.flush()
 
     def start(self):
         super(ProgressBarTerminal, self).start()
-        print
-        self.print_output()
+        self.p()
+        self.p_output()
 
     def advance(self):
         super(ProgressBarTerminal, self).advance()
-        self.print_output()
+        self.p_output()
 
     def finish(self):
         super(ProgressBarTerminal, self).finish()
         if not self.autohide:
-            print
+            self.p()
 
     def hide(self):
         super(ProgressBarTerminal, self).hide()
-        print (' ' * self.width) + '\r',
+        self.p((' ' * self.width) + '\r')
         sys.stdout.flush()
 
     def bar(self, bar_width):
