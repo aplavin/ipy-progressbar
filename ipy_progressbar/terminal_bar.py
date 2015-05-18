@@ -32,11 +32,11 @@ class ProgressBarTerminal(ProgressBarBase):
     def start(self):
         super(ProgressBarTerminal, self).start()
         self.p()
-        self.p_output()
+        self.print_output()
 
     def advance(self):
         super(ProgressBarTerminal, self).advance()
-        self.p_output()
+        self.print_output()
 
     def finish(self):
         super(ProgressBarTerminal, self).finish()
