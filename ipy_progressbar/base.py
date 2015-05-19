@@ -17,7 +17,7 @@ class ProgressBarBase(object):
                 self.max = None
         except TypeError:
             # not iterable - assume max is given
-            self.iterable = xrange(iterable_or_max)
+            self.iterable = range(iterable_or_max)
             self.max = iterable_or_max
 
         self.title = title
@@ -57,7 +57,7 @@ class ProgressBarBase(object):
 
     @property
     def frac(self):
-        return self.current * 1.0 / self.max
+        return self.current / self.max
 
     @property
     def percent(self):

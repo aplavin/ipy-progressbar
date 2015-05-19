@@ -8,7 +8,7 @@ except (IOError, ImportError):
     long_description = ''
 
 setup(name='ipy-progressbar',
-      version='1.0.6',
+      version='1.1',
       description='Progressbar for both IPython Notebooks (HTML, CSS, JS) and plain terminals.',
       long_description = long_description,
       classifiers=[
@@ -20,7 +20,7 @@ setup(name='ipy-progressbar',
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
         'Operating System :: OS Independent',
-        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
         'Topic :: Software Development :: Libraries :: Python Modules',
         'Topic :: Software Development :: User Interfaces',
         'Topic :: Terminals',

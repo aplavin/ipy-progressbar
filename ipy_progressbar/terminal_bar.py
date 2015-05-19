@@ -14,14 +14,14 @@ class ProgressBarTerminal(ProgressBarBase):
         self.format_strs = format_str.split('%(bar)s')
         self.width = width
         self.quiet = quiet
-        self.phases = (u' ', u'▏', u'▎', u'▍', u'▌', u'▋', u'▊', u'▉', u'█')
+        self.phases = (' ', '▏', '▎', '▍', '▌', '▋', '▊', '▉', '█')
 
     def p(self, s=None):
         if not self.quiet:
             if s is None:
-                print
+                print()
             else:
-                print s,
+                print(s, end=' ')
 
     def print_output(self):
         parts = [format % self for format in self.format_strs]
@@ -49,8 +49,8 @@ class ProgressBarTerminal(ProgressBarBase):
         sys.stdout.flush()
 
     def bar(self, bar_width):
-        completely_filled = self.current * bar_width / self.max
-        phase = (self.current * bar_width * len(self.phases) / self.max) % len(self.phases)
+        completely_filled = self.current * bar_width // self.max
+        phase = (self.current * bar_width * len(self.phases) // self.max) % len(self.phases)
 
         return (self.phases[-1] * completely_filled +
                 (self.phases[phase] if completely_filled < bar_width else '') +
