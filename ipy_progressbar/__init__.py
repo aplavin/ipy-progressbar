@@ -1,5 +1,8 @@
 from .terminal_bar import ProgressBarTerminal
-from .ipynb_bar import ProgressBarIPyNb
+try:
+    from .ipynb_bar import ProgressBarIPyNb
+except ImportError:
+    pass
 
 
 def ProgressBar(iterable_or_max,
