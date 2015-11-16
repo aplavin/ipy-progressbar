@@ -49,6 +49,18 @@ class ProgressBarBase(object):
             self.advance()
         self.finish()
 
+    def __aiter__(self):
+        self.start()
+        return self
+
+    def __anext__(self):
+        try:
+            self.advance()
+            return next(self.iterable)
+        except StopIteration:
+            self.finish()
+            raise StopAsyncIteration
+
     def set_extra_text(self, text):
         self.extra_text = text
 
@@ -57,7 +69,7 @@ class ProgressBarBase(object):
 
     @property
     def frac(self):
-        return self.current / self.max
+        return 1.0 * self.current / self.max
 
     @property
     def percent(self):

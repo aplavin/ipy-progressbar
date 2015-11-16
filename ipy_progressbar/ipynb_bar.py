@@ -1,3 +1,4 @@
+from time import time
 from .base import ProgressBarBase
 import uuid
 from IPython.display import display_html, display_javascript
@@ -14,7 +15,12 @@ class ProgressBarIPyNb(ProgressBarBase):
         self.key = key
         self.html_id = 'a' + str(uuid.uuid4())
 
-    def output_change_value(self):
+    def output_change_value(self, force=True):
+        if force or time() - getattr(self, 'last_print_time', 0) > 0.5:
+            self.last_print_time = time()
+        else:
+            return
+
         if self.quiet:
             return
         display_javascript('$("#%(html_id)s > .completed-part").css("width", "%(percent)f%%")' % self, raw=True)
@@ -61,6 +67,7 @@ class ProgressBarIPyNb(ProgressBarBase):
 
     def finish(self):
         super(ProgressBarIPyNb, self).finish()
+        self.output_change_value(force=True)
 
     def hide(self):
         super(ProgressBarIPyNb, self).hide()

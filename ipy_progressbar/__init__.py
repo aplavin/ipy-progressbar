@@ -19,10 +19,6 @@ def ProgressBar(iterable_or_max,
 def in_ipynb():
     try:
         cfg = get_ipython().config
-        # if cfg['IPKernelApp']['parent_appname'] == 'ipython-notebook':
-            # return True
-        # else:
-            # return False
         return True
     except NameError:
         return False

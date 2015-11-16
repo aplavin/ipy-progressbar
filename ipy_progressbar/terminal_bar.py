@@ -1,4 +1,6 @@
-#encoding: utf-8
+# encoding: utf-8
+from __future__ import print_function
+from time import time
 from .base import ProgressBarBase
 import sys
 
@@ -23,10 +25,15 @@ class ProgressBarTerminal(ProgressBarBase):
             else:
                 print(s, end=' ')
 
-    def print_output(self):
+    def print_output(self, force=False):
+        if force or time() - getattr(self, 'last_print_time', 0) > 0.5:
+            self.last_print_time = time()
+        else:
+            return
+
         parts = [format % self for format in self.format_strs]
         parts[1:1] = self.bar(self.width - sum(map(len, parts)))
-        self.p( '\r' + ''.join(parts))
+        self.p('\r' + ''.join(parts))
         sys.stdout.flush()
 
     def start(self):
@@ -40,6 +47,7 @@ class ProgressBarTerminal(ProgressBarBase):
 
     def finish(self):
         super(ProgressBarTerminal, self).finish()
+        self.print_output(force=True)
         if not self.autohide:
             self.p()
 
