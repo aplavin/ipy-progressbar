@@ -2,6 +2,12 @@ from time import time
 from collections import deque
 from math import sqrt
 
+try:
+    from asyncio import coroutine
+except ImportError:
+    def coroutine(func):
+        return func
+
 
 class ProgressBarBase(object):
 
@@ -49,10 +55,12 @@ class ProgressBarBase(object):
             self.advance()
         self.finish()
 
+    @coroutine
     def __aiter__(self):
         self.start()
         return self
 
+    @coroutine
     def __anext__(self):
         try:
             self.advance()
