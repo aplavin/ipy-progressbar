@@ -15,7 +15,7 @@ class ProgressBarIPyNb(ProgressBarBase):
         self.key = key
         self.html_id = 'a' + str(uuid.uuid4())
 
-    def output_change_value(self, force=True):
+    def output_change_value(self, force=False):
         if force or time() - getattr(self, 'last_print_time', 0) > 0.5:
             self.last_print_time = time()
         else:
