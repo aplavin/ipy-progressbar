@@ -42,6 +42,10 @@ class ProgressBarBase(object):
         self.last_time = time()
         self.current += 1
 
+        if time() - getattr(self, 'last_print_time', 0) > 0.5:
+            self.last_print_time = time()
+            self.display_update()
+
     def finish(self):
         pass
 

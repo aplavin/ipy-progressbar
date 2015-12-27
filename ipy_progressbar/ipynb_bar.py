@@ -30,12 +30,7 @@ class ProgressBarIPyNb(ProgressBarBase):
 
         self.displayed = False
 
-    def output_change_value(self, force=False):
-        if force or time() - getattr(self, 'last_print_time', 0) > 0.5:
-            self.last_print_time = time()
-        else:
-            return
-
+    def display_update(self):
         self.progress_w.value = self.percent
         self.info_w.value = '<h3 style="display: inline"><small>%s</small></h3>' % (self.format_str % self)
 
@@ -44,15 +39,11 @@ class ProgressBarIPyNb(ProgressBarBase):
         if not self.displayed:
             self.displayed = True
             display(self.container_w)
-        self.output_change_value()
-
-    def advance(self):
-        super(ProgressBarIPyNb, self).advance()
-        self.output_change_value()
+        self.display_update()
 
     def finish(self):
         super(ProgressBarIPyNb, self).finish()
-        self.output_change_value(force=True)
+        self.display_update()
 
     def log_message(self, text):
         super(ProgressBarIPyNb, self).log_message(text)

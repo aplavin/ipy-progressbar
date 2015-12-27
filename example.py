@@ -19,8 +19,8 @@ for i in ProgressBar(10000):
 
 
 # nested
-pb = ProgressBar(5, title='Outer', key='outer')
+pb = ProgressBar(5, title='Outer')
+pb_inner = ProgressBar(5, title='Inner')
 for i in pb:
-    pb_inner = ProgressBar(5, title='Inner', key='inner')
     for j in pb_inner:
         sleep(0.5 * random())

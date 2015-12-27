@@ -23,12 +23,7 @@ class ProgressBarTerminal(ProgressBarBase):
         else:
             print(s, end=' ')
 
-    def print_output(self, force=False):
-        if force or time() - getattr(self, 'last_print_time', 0) > 0.5:
-            self.last_print_time = time()
-        else:
-            return
-
+    def display_update(self):
         parts = [format % self for format in self.format_strs]
         parts[1:1] = self.bar(self.width - sum(map(len, parts)))
         self.p('\r' + ''.join(parts))
@@ -37,15 +32,11 @@ class ProgressBarTerminal(ProgressBarBase):
     def start(self):
         super(ProgressBarTerminal, self).start()
         self.p()
-        self.print_output()
-
-    def advance(self):
-        super(ProgressBarTerminal, self).advance()
-        self.print_output()
+        self.display_update()
 
     def finish(self):
         super(ProgressBarTerminal, self).finish()
-        self.print_output(force=True)
+        self.display_update()
         self.p()
 
     def bar(self, bar_width):
