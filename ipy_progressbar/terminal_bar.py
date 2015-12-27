@@ -9,21 +9,19 @@ class ProgressBarTerminal(ProgressBarBase):
 
     def __init__(self,
                  iterable_or_max,
-                 title='Progress', key=None, autohide=False, quiet=False,
+                 title='',
                  format_str='%(title)s: %(percent)3d%% [%(bar)s] %(current)d/%(max)d [%(elapsed).1f s] [eta %(eta_avg).0f+-%(eta_stddev).0f s]',
                  width=80):
-        super(ProgressBarTerminal, self).__init__(iterable_or_max, title, key, autohide, quiet)
+        super(ProgressBarTerminal, self).__init__(iterable_or_max, title)
         self.format_strs = format_str.split('%(bar)s')
         self.width = width
-        self.quiet = quiet
         self.phases = (' ', '▏', '▎', '▍', '▌', '▋', '▊', '▉', '█')
 
     def p(self, s=None):
-        if not self.quiet:
-            if s is None:
-                print()
-            else:
-                print(s, end=' ')
+        if s is None:
+            print()
+        else:
+            print(s, end=' ')
 
     def print_output(self, force=False):
         if force or time() - getattr(self, 'last_print_time', 0) > 0.5:
@@ -48,13 +46,7 @@ class ProgressBarTerminal(ProgressBarBase):
     def finish(self):
         super(ProgressBarTerminal, self).finish()
         self.print_output(force=True)
-        if not self.autohide:
-            self.p()
-
-    def hide(self):
-        super(ProgressBarTerminal, self).hide()
-        self.p((' ' * self.width) + '\r')
-        sys.stdout.flush()
+        self.p()
 
     def bar(self, bar_width):
         completely_filled = self.current * bar_width // self.max
@@ -64,5 +56,7 @@ class ProgressBarTerminal(ProgressBarBase):
                 (self.phases[phase] if completely_filled < bar_width else '') +
                 self.phases[0] * (bar_width - completely_filled))
 
-    def set_extra_text(self, text):
-        super(ProgressBarTerminal, self).set_extra_text(text)
+    def log_message(self, text):
+        super(ProgressBarTerminal, self).log_message(text)
+
+    set_extra_text = log_message

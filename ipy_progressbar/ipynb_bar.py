@@ -1,19 +1,34 @@
 from time import time
 from .base import ProgressBarBase
-import uuid
-from IPython.display import display_html, display_javascript
+import ipywidgets as iw
+from traitlets import directional_link
+from IPython.display import display
 
 
 class ProgressBarIPyNb(ProgressBarBase):
-
     def __init__(self,
                  iterable_or_max,
-                 title='Progress', key=None, autohide=False, quiet=False,
+                 title='',
                  format_str='%(current)d/%(max)d (%(percent)d%%) in %(elapsed).1f s, %(last_iter_time).2f s last iter; eta %(eta_avg).0f+-%(eta_stddev).0f s'):
-        super(ProgressBarIPyNb, self).__init__(iterable_or_max, title, key, autohide, quiet)
+        super(ProgressBarIPyNb, self).__init__(iterable_or_max, title)
         self.format_str = format_str
-        self.key = key
-        self.html_id = 'a' + str(uuid.uuid4())
+
+        self.progress_w = iw.FloatProgress(min=0, max=100, value=30, width='100%')
+        self.title_w = iw.HTML('<h3 style="display: inline">%(title)s</h3>&nbsp;' % self)
+        self.info_w = iw.HTML()
+
+        self.log_check_w = iw.Checkbox(value=False, visible=False, description='Show Log')
+        self.log_w = iw.HTML()
+        self.log_header_w = iw.HTML('<h2><small>Log messages</small></h2>')
+        directional_link((self.log_check_w, 'value'), (self.log_w, 'visible'))
+        directional_link((self.log_check_w, 'value'), (self.log_header_w, 'visible'))
+
+        self.container_w = iw.VBox([iw.HBox([self.title_w, self.info_w]),
+                                    iw.HBox([self.progress_w, self.log_check_w]),
+                                    self.log_header_w, self.log_w,
+                                    iw.HBox(height=20)])
+
+        self.displayed = False
 
     def output_change_value(self, force=False):
         if force or time() - getattr(self, 'last_print_time', 0) > 0.5:
@@ -21,44 +36,14 @@ class ProgressBarIPyNb(ProgressBarBase):
         else:
             return
 
-        if self.quiet:
-            return
-        display_javascript('$("#%(html_id)s > .completed-part").css("width", "%(percent)f%%")' % self, raw=True)
-        display_javascript('$("#%(html_id)s > .running-part").css("width", "%(percent_one)f%%")' % self, raw=True)
-        display_javascript('$("#%s > .text > .main").text("%s")' % (self.html_id, self.format_str % self), raw=True)
+        self.progress_w.value = self.percent
+        self.info_w.value = '<h3 style="display: inline"><small>%s</small></h3>' % (self.format_str % self)
 
     def start(self):
         super(ProgressBarIPyNb, self).start()
-        if not self.quiet:
-            display_javascript('$("[data-key=\'%(key)s\']").parent().parent().remove()' % self, raw=True)
-            display_html('''
-            <style>
-                .progress {
-                    text-align:center;
-                }
-
-                .progress > .progress-bar {
-                    transition-property: none;
-                }
-
-                .progress > .text {
-                    position: absolute;
-                    right: 0;
-                    left: 0;
-                }
-            </style>
-
-            <h3>%(title)s:</h3>
-
-            <div class="progress" id="%(html_id)s" data-key="%(key)s">
-                <div class="progress-bar progress-bar-success completed-part" style="width: 0%%"></div>
-                <div class="progress-bar progress-bar-warning running-part" style="width: 100%%"></div>
-                <span class="text">
-                    <span class="main">Starting...</span>
-                    <span class="extra"></span>
-                </span>
-            </div>
-            ''' % self, raw=True)
+        if not self.displayed:
+            self.displayed = True
+            display(self.container_w)
         self.output_change_value()
 
     def advance(self):
@@ -69,17 +54,16 @@ class ProgressBarIPyNb(ProgressBarBase):
         super(ProgressBarIPyNb, self).finish()
         self.output_change_value(force=True)
 
-    def hide(self):
-        super(ProgressBarIPyNb, self).hide()
-        if self.quiet:
-            return
-        display_javascript('$("#%s").parent().parent().hide()' % self.html_id, raw=True)
+    def log_message(self, text):
+        super(ProgressBarIPyNb, self).log_message(text)
+        if len(self.log_messages) == 1:
+            # first message
+            self.log_check_w.visible = True
+            self.log_check_w.value = True
 
-    def set_extra_text(self, text):
-        super(ProgressBarIPyNb, self).set_extra_text(text)
-        if self.quiet:
-            return
-        display_javascript('$("#%s > .text > .extra").text("|||| %s")' % (self.html_id, text), raw=True)
+        self.log_w.value = '<br/>'.join(self.log_messages)
+
+    set_extra_text = log_message
 
     @property
     def percent_one(self):

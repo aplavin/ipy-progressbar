@@ -11,7 +11,7 @@ except ImportError:
 
 class ProgressBarBase(object):
 
-    def __init__(self, iterable_or_max, title=None, key=None, autohide=False, quiet=False):
+    def __init__(self, iterable_or_max, title=None):
         try:
             # if any iterable given - use it
             self.iterable = iter(iterable_or_max)
@@ -27,12 +27,10 @@ class ProgressBarBase(object):
             self.max = iterable_or_max
 
         self.title = title
-        self.key = key
-        self.autohide = autohide
-        self.quiet = quiet
 
         self.current = None
         self.iter_times = deque(maxlen=100)
+        self.log_messages = []
 
     def start(self):
         self.start_time = time()
@@ -45,8 +43,7 @@ class ProgressBarBase(object):
         self.current += 1
 
     def finish(self):
-        if self.autohide:
-            self.hide()
+        pass
 
     def __iter__(self):
         self.start()
@@ -69,11 +66,10 @@ class ProgressBarBase(object):
             self.finish()
             raise StopAsyncIteration
 
-    def set_extra_text(self, text):
-        self.extra_text = text
+    def log_message(self, text):
+        self.log_messages.append(text)
 
-    def hide(self):
-        pass
+    set_extra_text = log_message
 
     @property
     def frac(self):
