@@ -16,6 +16,7 @@ class ProgressBarIPyNb(ProgressBarBase):
         self.progress_w = iw.FloatProgress(min=0, max=100, value=30, width='100%')
         self.title_w = iw.HTML('<h3 style="display: inline">%(title)s</h3>&nbsp;' % self)
         self.info_w = iw.HTML()
+        self.log_last_w = iw.HTML()
 
         self.log_check_w = iw.Checkbox(value=False, visible=False, description='Show Log')
         self.log_w = iw.HTML()
@@ -23,7 +24,7 @@ class ProgressBarIPyNb(ProgressBarBase):
         directional_link((self.log_check_w, 'value'), (self.log_w, 'visible'))
         directional_link((self.log_check_w, 'value'), (self.log_header_w, 'visible'))
 
-        self.container_w = iw.VBox([iw.HBox([self.title_w, self.info_w]),
+        self.container_w = iw.VBox([iw.HBox([self.title_w, self.info_w, self.log_last_w]),
                                     iw.HBox([self.progress_w, self.log_check_w]),
                                     self.log_header_w, self.log_w,
                                     iw.HBox(height=20)])
@@ -53,6 +54,7 @@ class ProgressBarIPyNb(ProgressBarBase):
             self.log_check_w.value = True
 
         self.log_w.value = '<br/>'.join(self.log_messages)
+        self.log_last_w.value = self.log_messages[-1]
 
     set_extra_text = log_message
 
