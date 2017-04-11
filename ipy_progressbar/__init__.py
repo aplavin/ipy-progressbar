@@ -19,6 +19,10 @@ def ProgressBar(iterable_or_max,
 def in_ipynb():
     try:
         cfg = get_ipython().config
-        return True
+        if cfg:
+            return True
+        else:
+            # Dictionary is empty
+            return False
     except NameError:
         return False
